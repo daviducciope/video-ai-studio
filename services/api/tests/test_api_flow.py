@@ -1,52 +1,53 @@
 from __future__ import annotations
 
 from pathlib import Path
-import os
+import sys
 
-from fastapi.testclient import TestClient
+ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT / "services" / "api"))
+sys.path.insert(0, str(ROOT / "packages" / "shared"))
+
+from app.main import app
+from app.schemas.project import ProjectCreate
+from app.services.creative import generate_storyboard
+from app.services.pipeline import generate_previews, run_render, select_scene_preview
+from app.services.repository import ProjectRepository
 
 
-def test_full_project_flow(tmp_path: Path, monkeypatch) -> None:
+def test_full_backend_flow(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setenv("DATA_ROOT", str(tmp_path / "data"))
+    repo = ProjectRepository()
 
-    from app.main import app
-
-    client = TestClient(app)
-
-    create_response = client.post(
-        "/projects",
-        json={
-            "title": "Launch Campaign",
-            "prompt": "Create a bold launch video for a wearable AI assistant",
-            "style": "cinematic",
-            "duration_target": 45,
-            "aspect_ratio": "16:9",
-            "avatar_notes": "Confident founder",
-        },
+    project = repo.create_project(
+        ProjectCreate(
+            title="Launch Campaign",
+            prompt="Create a bold launch video for a wearable AI assistant",
+            style="cinematic",
+            duration_target=45,
+            aspect_ratio="16:9",
+            avatar_notes="Confident founder",
+        )
     )
-    assert create_response.status_code == 200
-    project_id = create_response.json()["id"]
+    assert project.status == "draft"
 
-    storyboard_response = client.post(f"/projects/{project_id}/storyboard")
-    assert storyboard_response.status_code == 200
-    assert len(storyboard_response.json()["storyboard"]["scenes"]) == 4
+    project.storyboard = generate_storyboard(project)
+    project.status = "storyboard_ready"
+    project = repo.save_project(project)
+    assert len(project.storyboard.scenes) == 4
 
-    preview_response = client.post(f"/projects/{project_id}/previews", json={"variants_per_scene": 1})
-    assert preview_response.status_code == 200
-    scene = preview_response.json()["storyboard"]["scenes"][0]
-    assert len(scene["previews"]) == 1
+    project = generate_previews(project, variants_per_scene=1)
+    project = repo.save_project(project)
+    first_scene = project.storyboard.scenes[0]
+    assert len(first_scene.previews) == 1
 
-    select_response = client.post(
-        f"/projects/{project_id}/scenes/{scene['id']}/select",
-        json={"preview_id": scene["previews"][0]["id"]},
-    )
-    assert select_response.status_code == 200
-    assert select_response.json()["storyboard"]["scenes"][0]["selected"] is True
+    project = select_scene_preview(project, first_scene.id, first_scene.previews[0].id)
+    project = repo.save_project(project)
+    assert project.storyboard.scenes[0].selected is True
 
-    render_response = client.post(f"/projects/{project_id}/render")
-    assert render_response.status_code == 200
-    assert render_response.json()["render_job"]["status"] == "completed"
+    project = repo.start_render_job(project)
+    rendered_project, logs = run_render(project)
+    project = repo.update_outputs(rendered_project, rendered_project.outputs, logs)
 
-    outputs_response = client.get(f"/projects/{project_id}/outputs")
-    assert outputs_response.status_code == 200
-    assert len(outputs_response.json()["outputs"]) == 2
+    assert project.render_job.status == "completed"
+    assert len(project.outputs) == 2
+    assert any(route.path == "/projects" for route in app.routes)

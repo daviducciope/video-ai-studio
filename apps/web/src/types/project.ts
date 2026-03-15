@@ -4,10 +4,32 @@ export type PreviewAsset = {
   file_name: string;
   relative_path: string;
   url: string;
+  resolved_url: string | null;
   mime_type: string;
   prompt: string;
   status: string;
   created_at: string;
+};
+
+export type IdentityImageAsset = {
+  id: string;
+  file_name: string;
+  relative_path: string;
+  url: string;
+  resolved_url: string | null;
+  mime_type: string;
+  size_bytes: number;
+  role: "primary" | "reference";
+  created_at: string;
+};
+
+export type IdentityPack = {
+  primary_image: IdentityImageAsset | null;
+  reference_images: IdentityImageAsset[];
+  character_notes: string | null;
+  lock_identity: boolean;
+  created_at: string;
+  updated_at: string;
 };
 
 export type Scene = {
@@ -36,6 +58,7 @@ export type OutputAsset = {
   file_name: string;
   relative_path: string;
   url: string;
+  resolved_url: string | null;
   mime_type: string;
   summary: string;
   created_at: string;
@@ -58,6 +81,7 @@ export type Project = {
   duration_target: number;
   aspect_ratio: "9:16" | "16:9";
   avatar_notes: string | null;
+  identity_pack: IdentityPack | null;
   status: string;
   storyboard: Storyboard | null;
   render_job: RenderJob | null;

@@ -3,9 +3,10 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from uuid import uuid4
 
+from app.schemas.project import PreviewAsset, Project
 from app.core.config import get_settings
-from app.schemas.project import OutputAsset, PreviewAsset, Project
-from video_ai_shared.mock_media import build_preview_svg, build_render_manifest
+from app.services.rendering import LocalRenderExecutor
+from video_ai_shared.mock_media import build_preview_svg
 
 
 def generate_previews(project: Project, variants_per_scene: int = 1) -> Project:
@@ -16,6 +17,7 @@ def generate_previews(project: Project, variants_per_scene: int = 1) -> Project:
 
     for scene in storyboard.scenes:
         scene.previews = []
+        scene.selected = False
         for variant_index in range(variants_per_scene):
             prompt = f"{scene.visual_prompt} Variant {variant_index + 1}"
             artifact = build_preview_svg(
@@ -34,13 +36,14 @@ def generate_previews(project: Project, variants_per_scene: int = 1) -> Project:
                     file_name=artifact.file_name,
                     relative_path=artifact.relative_path,
                     url=f"/files/{artifact.relative_path}",
+                    resolved_url=f"/files/{artifact.relative_path}",
                     mime_type=artifact.mime_type,
                     prompt=artifact.prompt,
                     status="generated",
                     created_at=created_at,
                 )
             )
-        if scene.previews and not scene.selected_preview_id:
+        if scene.previews:
             scene.selected_preview_id = scene.previews[0].id
     project.status = "previews_ready"
     return project
@@ -66,53 +69,4 @@ def select_scene_preview(project: Project, scene_id: str, preview_id: str | None
 
 
 def run_render(project: Project) -> tuple[Project, list[str]]:
-    settings = get_settings()
-    storyboard = project.storyboard
-    if storyboard is None:
-        raise ValueError("Storyboard missing")
-
-    selected_scenes = [
-        {
-            "title": scene.title,
-            "voiceover": scene.voiceover,
-            "visual_prompt": scene.visual_prompt,
-        }
-        for scene in storyboard.scenes
-        if scene.selected or scene.selected_preview_id
-    ]
-    if not selected_scenes:
-        selected_scenes = [
-            {
-                "title": scene.title,
-                "voiceover": scene.voiceover,
-                "visual_prompt": scene.visual_prompt,
-            }
-            for scene in storyboard.scenes
-        ]
-
-    artifacts = build_render_manifest(
-        output_dir=settings.renders_dir,
-        project_id=project.id,
-        title=storyboard.refined_title,
-        script=storyboard.script,
-        selected_scenes=selected_scenes,
-    )
-    created_at = datetime.now(UTC)
-    outputs = [
-        OutputAsset(
-            id=str(uuid4()),
-            file_name=artifact.file_name,
-            relative_path=artifact.relative_path,
-            url=f"/files/{artifact.relative_path}",
-            mime_type=artifact.mime_type,
-            summary=artifact.summary,
-            created_at=created_at,
-        )
-        for artifact in artifacts
-    ]
-    logs = [
-        "Preview selection resolved",
-        "Mock render completed",
-        f"{len(outputs)} output artifact(s) available",
-    ]
-    return project.model_copy(update={"outputs": outputs}), logs
+    return LocalRenderExecutor().run(project)

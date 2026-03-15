@@ -6,7 +6,7 @@ from uuid import uuid4
 import json
 
 from app.core.config import get_settings
-from app.schemas.project import OutputAsset, Project, ProjectCreate, RenderJob
+from app.schemas.project import IdentityPack, OutputAsset, Project, ProjectCreate, RenderJob
 
 
 class ProjectRepository:
@@ -29,6 +29,7 @@ class ProjectRepository:
 
     def create_project(self, payload: ProjectCreate) -> Project:
         now = datetime.now(UTC)
+        character_notes = payload.character_notes or payload.avatar_notes
         project = Project(
             id=str(uuid4()),
             title=payload.title,
@@ -36,7 +37,13 @@ class ProjectRepository:
             style=payload.style,
             duration_target=payload.duration_target,
             aspect_ratio=payload.aspect_ratio,
-            avatar_notes=payload.avatar_notes,
+            avatar_notes=character_notes,
+            identity_pack=IdentityPack(
+                character_notes=character_notes,
+                lock_identity=payload.lock_identity,
+                created_at=now,
+                updated_at=now,
+            ),
             status="draft",
             created_at=now,
             updated_at=now,
@@ -46,8 +53,9 @@ class ProjectRepository:
 
     def save_project(self, project: Project) -> Project:
         project.updated_at = datetime.now(UTC)
+        serialized_project = self._project_for_storage(project)
         self._path(project.id).write_text(
-            project.model_dump_json(indent=2),
+            serialized_project.model_dump_json(indent=2),
             encoding="utf-8",
         )
         return project
@@ -75,4 +83,30 @@ class ProjectRepository:
 
     def _load(self, path: Path) -> Project:
         raw = json.loads(path.read_text(encoding="utf-8"))
-        return Project.model_validate(raw)
+        project = Project.model_validate(raw)
+        if project.identity_pack is None:
+            timestamp = project.created_at
+            project.identity_pack = IdentityPack(
+                character_notes=project.avatar_notes,
+                lock_identity=False,
+                created_at=timestamp,
+                updated_at=timestamp,
+            )
+        if project.avatar_notes is None and project.identity_pack.character_notes:
+            project.avatar_notes = project.identity_pack.character_notes
+        return project
+
+    def _project_for_storage(self, project: Project) -> Project:
+        sanitized = project.model_copy(deep=True)
+        if sanitized.identity_pack is not None:
+            if sanitized.identity_pack.primary_image is not None:
+                sanitized.identity_pack.primary_image.resolved_url = None
+            for asset in sanitized.identity_pack.reference_images:
+                asset.resolved_url = None
+        if sanitized.storyboard is not None:
+            for scene in sanitized.storyboard.scenes:
+                for preview in scene.previews:
+                    preview.resolved_url = None
+        for output in sanitized.outputs:
+            output.resolved_url = None
+        return sanitized

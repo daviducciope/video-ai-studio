@@ -11,6 +11,8 @@ class ProjectCreate(BaseModel):
     duration_target: int = Field(ge=15, le=300)
     aspect_ratio: str = Field(pattern=r"^(9:16|16:9)$")
     avatar_notes: str | None = Field(default=None, max_length=400)
+    character_notes: str | None = Field(default=None, max_length=2000)
+    lock_identity: bool = False
 
 
 class PreviewRequest(BaseModel):
@@ -27,10 +29,32 @@ class PreviewAsset(BaseModel):
     file_name: str
     relative_path: str
     url: str
+    resolved_url: str | None = None
     mime_type: str
     prompt: str
     status: str
     created_at: datetime
+
+
+class IdentityImageAsset(BaseModel):
+    id: str
+    file_name: str
+    relative_path: str
+    url: str
+    resolved_url: str | None = None
+    mime_type: str
+    size_bytes: int
+    role: str
+    created_at: datetime
+
+
+class IdentityPack(BaseModel):
+    primary_image: IdentityImageAsset | None = None
+    reference_images: list[IdentityImageAsset] = Field(default_factory=list)
+    character_notes: str | None = None
+    lock_identity: bool = False
+    created_at: datetime
+    updated_at: datetime
 
 
 class Scene(BaseModel):
@@ -68,6 +92,7 @@ class OutputAsset(BaseModel):
     file_name: str
     relative_path: str
     url: str
+    resolved_url: str | None = None
     mime_type: str
     summary: str
     created_at: datetime
@@ -81,6 +106,7 @@ class Project(BaseModel):
     duration_target: int
     aspect_ratio: str
     avatar_notes: str | None = None
+    identity_pack: IdentityPack | None = None
     status: str
     storyboard: Storyboard | None = None
     render_job: RenderJob | None = None

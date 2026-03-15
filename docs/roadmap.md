@@ -1,85 +1,55 @@
 # Roadmap
 
-## Fase 0 — Bootstrap repo
-- [x] Creare la cartella progetto `video-ai-studio`
-- [x] Inizializzare Git
-- [x] Creare `.gitignore`
-- [x] Creare `README.md`
-- [x] Copiare questo file come `SOURCE_OF_TRUTH.md`
-- [x] Creare `AGENTS.md`
-- [x] Creare `.env.example`
-- [x] Creare struttura cartelle iniziale
+## Completato davvero
 
-## Fase 1 — Frontend base
-- [x] Inizializzare app Next.js con TypeScript
-- [x] Configurare Tailwind
-- [x] Creare layout base
-- [x] Creare Dashboard
-- [x] Creare pagina Nuovo Progetto
-- [x] Creare pagina dettaglio progetto
-- [x] Creare componenti per storyboard, scene e stato render
+### Foundation locale
+- [x] Repo CLI-first con `make setup`, `make dev`, `make test`
+- [x] Frontend Next.js + Tailwind
+- [x] Backend FastAPI con persistenza file-based JSON
+- [x] Worker Python mock separato
+- [x] Workflow locale: create project -> storyboard -> preview -> render mock
 
-## Fase 2 — Backend base
-- [x] Inizializzare FastAPI
-- [x] Creare struttura app backend ordinata
-- [x] Creare modelli e schemi principali
-- [x] Implementare endpoint Project
-- [x] Implementare endpoint Storyboard
-- [x] Implementare endpoint Preview
-- [x] Implementare endpoint Render
-- [x] Aggiungere validazione dati e gestione errori
+### MVP avanzato locale
+- [x] Fix della gestione errori frontend che mostrava `[object Object]`
+- [x] Validazione frontend minima per titolo, prompt e durata
+- [x] Supporto identity pack nel modello progetto
+- [x] Upload locale immagine principale personaggio
+- [x] Upload locale di fino a 8 reference images
+- [x] Salvataggio metadati identity pack dentro il progetto JSON
+- [x] Pagina "Nuovo progetto" con sezione Avatar / Personaggio
+- [x] Pagina dettaglio progetto con identity pack, stati piu' leggibili e gallery preview complete
+- [x] Selezione esplicita di una preview specifica per scena
+- [x] Test aggiornati per nuovi campi, upload, metadati identity pack, selezione preview e render mock
+- [x] `.python-version` fissato a `3.11`
+- [x] Messaggio setup piu' chiaro se `python3.11` non e' disponibile
 
-## Fase 3 — Persistenza e dati
-- [x] Scegliere persistenza iniziale (SQLite o JSON strutturati)
-- [x] Salvare progetti
-- [x] Salvare storyboard
-- [x] Salvare scene
-- [x] Salvare stato render
-- [x] Salvare output e preview
+### AWS step minimo reale
+- [x] Config env minima per `STORAGE_BACKEND`, `AWS_REGION`, `S3_BUCKET_NAME`, `S3_PREFIX`, `PRESIGNED_URL_TTL_SECONDS`, `RENDER_BACKEND`
+- [x] `S3StorageAdapter` reale con upload via boto3, key normalizzate, metadata minimi e SSE-S3
+- [x] Switch runtime `local|s3` per lo storage asset
+- [x] Bucket previsto privato con delivery file tramite URL presigned
+- [x] Frontend compatibile con `resolved_url` per asset/output/preview
+- [x] `RenderExecutor` introdotto con `LocalRenderExecutor` reale e `RemoteRenderExecutorStub`
+- [x] Script CLI prudenti per check/bootstrap bucket S3
+- [x] Template EC2 GPU documentati ma non eseguiti
+- [x] Test backend aggiuntivi senza dipendenza da AWS reale
 
-## Fase 4 — Worker e pipeline mock reale
-- [x] Creare worker Python separato
-- [x] Implementare job preview mock ma realistici
-- [x] Implementare job render mock ma realistici
-- [x] Aggiornare stati job
-- [x] Generare file output dimostrabili
+## Predisposto ma non implementato davvero
 
-## Fase 5 — Collegamento frontend-backend
-- [x] Collegare il form progetto alle API
-- [x] Collegare generazione storyboard
-- [x] Collegare preview scene
-- [x] Collegare selezione scene
-- [x] Collegare render finale
-- [x] Mostrare stato e output nella UI
+- [x] Render remoto dietro `RemoteRenderExecutorStub`
+- [x] Template EC2 GPU e IAM policy di esempio
+- [ ] Upload di preview mock e render output su S3 reale
+- [ ] Adapter cloud per job remoti o code asincrone reali
+- [ ] Integrazione ComfyUI reale
+- [ ] Pipeline ffmpeg reale
+- [ ] Auth applicativa e permessi utente sugli asset
 
-## Fase 6 — CLI e developer experience
-- [x] Creare `Makefile` o script equivalenti
-- [x] Creare script di bootstrap
-- [x] Creare script run frontend/backend/worker
-- [x] Scrivere README con istruzioni reali
-- [x] Aggiungere comandi test
+## Ancora da fare
 
-## Fase 7 — Preparazione cloud
-- [x] Creare `infra/aws/README.md`
-- [x] Creare `infra/aws/plan.md`
-- [x] Preparare struttura per S3 client wrapper
-- [x] Preparare struttura per future EC2 GPU jobs
-- [x] Non hardcodare nessuna credenziale
-
-## Fase 8 — Stabilizzazione
-- [x] Testare l'intero flusso end-to-end
-- [x] Correggere bug evidenti
-- [x] Ripulire codice duplicato
-- [x] Migliorare messaggi di errore
-- [x] Verificare che il progetto sia facile da avviare
-
-## Fase 9 — Done definition
-- [x] Da terminale il progetto si installa
-- [x] Frontend parte senza errori
-- [x] Backend parte senza errori
-- [x] Si puo' creare un progetto
-- [x] Si puo' generare storyboard
-- [x] Si possono vedere le scene
-- [x] Si puo' lanciare un render
-- [x] Si ottiene un output finale
-- [x] README e docs sono sufficienti per ripartire da zero
+- [ ] Polling o job queue reale per render asincroni
+- [ ] Eliminazione o sostituzione asset immagine dal dettaglio progetto
+- [ ] Compressione/resize lato backend per immagini caricate
+- [ ] Test end-to-end browser della UI
+- [ ] Filtri e ricerca nella dashboard
+- [ ] Storage abstraction remota anche per preview e render, non solo per gli asset personaggio
+- [ ] Strategia di migrazione da JSON locale a storage cloud senza downtime

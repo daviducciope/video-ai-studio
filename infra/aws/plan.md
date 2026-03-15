@@ -1,20 +1,22 @@
 # AWS Plan
 
-## Fase 1
+## Fase 1: completata in questo step
 
-- introdurre `StorageAdapter` con implementazione locale e futura S3
-- introdurre `RenderExecutor` con implementazione locale e futura EC2 GPU
-- mantenere le API stabili
+- `StorageAdapter` reale con backend `local|s3`
+- `S3StorageAdapter` operativo per gli asset dell'identity pack
+- bucket S3 privato con presigned URL in lettura
+- `RenderExecutor` con implementazione locale e stub remota
+- API stabili e flusso locale preservato
 
-## Fase 2
+## Fase 2: predisposta, non ancora operativa
 
-- bucket S3 per preview e output
-- upload asincrono degli asset
-- coda job remoti
-- callback o polling per stato render
+- portare anche preview e output mock su S3
+- introdurre upload asincrono e cleanup asset
+- definire contratto job per render remoto
+- aggiungere polling o callback di stato
 
-## Fase 3
+## Fase 3: ancora da fare
 
 - worker remoti su EC2 GPU
-- ffmpeg e generatori video reali
-- osservabilita' e retry policy
+- ComfyUI e ffmpeg reali
+- osservabilita', retry policy e cost controls

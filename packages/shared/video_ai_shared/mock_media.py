@@ -23,7 +23,7 @@ class RenderArtifact:
 
 
 def _stamp() -> str:
-    return datetime.now(UTC).strftime("%Y%m%d%H%M%S")
+    return datetime.now(UTC).strftime("%Y%m%d%H%M%S%f")
 
 
 def build_preview_svg(

@@ -86,6 +86,13 @@ export function generatePreviews(projectId: string) {
   });
 }
 
+export function regenerateScenePreviews(projectId: string, sceneId: string) {
+  return apiRequest<Project>(`/projects/${projectId}/scenes/${sceneId}/previews`, {
+    method: "POST",
+    body: JSON.stringify({ variants_per_scene: 3 }),
+  });
+}
+
 export function uploadProjectAssets(projectId: string, role: "primary" | "reference", files: File[]) {
   const formData = new FormData();
   formData.append("role", role);
@@ -106,5 +113,19 @@ export function selectScene(projectId: string, sceneId: string, previewId?: stri
 export function renderProject(projectId: string) {
   return apiRequest<Project>(`/projects/${projectId}/render`, {
     method: "POST",
+  });
+}
+
+export function generateProjectVideo(projectId: string) {
+  return apiRequest<Project>(`/projects/${projectId}/video`, {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+}
+
+export function generateSceneVideo(projectId: string, sceneId: string) {
+  return apiRequest<Project>(`/projects/${projectId}/scenes/${sceneId}/video`, {
+    method: "POST",
+    body: JSON.stringify({}),
   });
 }

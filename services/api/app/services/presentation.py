@@ -27,6 +27,10 @@ def resolve_project_urls(
         for scene in project.storyboard.scenes:
             for preview in scene.previews:
                 preview.resolved_url = artifact_storage.resolve_url(relative_path=preview.relative_path)
+            if scene.generated_video is not None:
+                scene.generated_video.resolved_url = artifact_storage.resolve_url(relative_path=scene.generated_video.relative_path)
     for output in project.outputs:
         output.resolved_url = artifact_storage.resolve_url(relative_path=output.relative_path)
+    if project.project_video is not None:
+        project.project_video.resolved_url = artifact_storage.resolve_url(relative_path=project.project_video.relative_path)
     return project

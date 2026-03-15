@@ -1,6 +1,8 @@
 .DS_Store
 .env
 aws_credential.md
+aws_credential
+aws_credential.*
 .venv/
 __pycache__/
 .pytest_cache/

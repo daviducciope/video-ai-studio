@@ -12,7 +12,7 @@ from app.main import app
 from app.schemas.project import ProjectCreate
 from app.services.assets import attach_identity_images
 from app.services.creative import generate_storyboard
-from app.services.pipeline import generate_previews, run_render, select_scene_preview
+from app.services.pipeline import generate_previews, generate_project_video, run_render, select_scene_preview
 from app.services.repository import ProjectRepository
 from app.services.storage import LocalStorageAdapter
 
@@ -90,6 +90,11 @@ def test_full_backend_flow_with_identity_pack(tmp_path: Path, monkeypatch) -> No
     reloaded_project = repo.save_project(reloaded_project)
     first_scene = reloaded_project.storyboard.scenes[0]
     assert len(first_scene.previews) == 3
+    assert first_scene.previews[0].generation_backend == "mock"
+    assert first_scene.previews[0].source_prompt is not None
+    assert first_scene.previews[0].negative_prompt is not None
+    assert first_scene.previews[0].identity_strength_score is not None
+    assert reloaded_project.preview_backend_effective == "mock"
 
     selected_preview = first_scene.previews[1]
     reloaded_project = select_scene_preview(reloaded_project, first_scene.id, selected_preview.id)
@@ -99,8 +104,14 @@ def test_full_backend_flow_with_identity_pack(tmp_path: Path, monkeypatch) -> No
     reloaded_project = repo.start_render_job(reloaded_project)
     rendered_project, logs = run_render(reloaded_project)
     final_project = repo.update_outputs(rendered_project, rendered_project.outputs, logs)
+    final_project = generate_project_video(final_project)
+    final_project = repo.save_project(final_project)
 
     assert final_project.render_job.status == "completed"
-    assert final_project.status == "ready"
+    assert final_project.project_video is not None
+    assert final_project.video_job is not None
     assert len(final_project.outputs) == 2
     assert any(route.path == "/projects/{project_id}/assets" for route in app.routes)
+    assert any(route.path == "/projects/{project_id}/scenes/{scene_id}/previews" for route in app.routes)
+    assert any(route.path == "/projects/{project_id}/video" for route in app.routes)
+    assert any(route.path == "/projects/{project_id}/scenes/{scene_id}/video" for route in app.routes)

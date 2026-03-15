@@ -3,11 +3,13 @@ from __future__ import annotations
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
 from app.core.config import get_settings
-from app.schemas.project import IdentityPack, PreviewRequest, Project, ProjectCreate, SceneSelectionRequest
+from app.schemas.project import IdentityPack, PreviewRequest, Project, ProjectCreate, SceneSelectionRequest, VideoGenerationRequest
 from app.services.assets import attach_identity_images
 from app.services.creative import generate_storyboard
-from app.services.pipeline import generate_previews, select_scene_preview
+from app.services.pipeline import generate_previews, generate_project_video, generate_scene_video, select_scene_preview
 from app.services.presentation import resolve_identity_pack_urls, resolve_project_urls
+from app.services.preview_generation import normalize_preview_backend
+from app.services.video_generation import normalize_video_backend
 from app.services.rendering import get_render_executor
 from app.services.repository import ProjectRepository
 from app.services.storage import LocalStorageAdapter, StorageError, get_storage_adapter
@@ -28,12 +30,18 @@ def _artifact_storage() -> LocalStorageAdapter:
 
 
 def _present_project(project: Project) -> Project:
+    project.preview_backend = normalize_preview_backend(get_settings().preview_backend)
+    project.video_backend = normalize_video_backend(get_settings().video_backend)
     has_identity_assets = bool(
         project.identity_pack
         and (project.identity_pack.primary_image is not None or project.identity_pack.reference_images)
     )
     has_previews = bool(project.storyboard and any(scene.previews for scene in project.storyboard.scenes))
-    has_outputs = bool(project.outputs)
+    has_outputs = bool(
+        project.outputs
+        or project.project_video is not None
+        or (project.storyboard and any(scene.generated_video is not None for scene in project.storyboard.scenes))
+    )
     if not (has_identity_assets or has_previews or has_outputs):
         return project
     try:
@@ -127,6 +135,20 @@ def create_previews(project_id: str, payload: PreviewRequest) -> Project:
     return _present_project(repo.save_project(project))
 
 
+@router.post("/projects/{project_id}/scenes/{scene_id}/previews", response_model=Project)
+def regenerate_scene_previews(project_id: str, scene_id: str, payload: PreviewRequest) -> Project:
+    repo = _repo()
+    try:
+        project = repo.get_project(project_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Project not found") from exc
+    try:
+        project = generate_previews(project, variants_per_scene=payload.variants_per_scene, scene_id=scene_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return _present_project(repo.save_project(project))
+
+
 @router.post("/projects/{project_id}/scenes/{scene_id}/select", response_model=Project)
 def select_preview(project_id: str, scene_id: str, payload: SceneSelectionRequest) -> Project:
     repo = _repo()
@@ -159,6 +181,36 @@ def render_project(project_id: str) -> Project:
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     return _present_project(repo.update_outputs(rendered_project, rendered_project.outputs, logs))
+
+
+@router.post("/projects/{project_id}/video", response_model=Project)
+def create_project_video(project_id: str, payload: VideoGenerationRequest | None = None) -> Project:
+    repo = _repo()
+    try:
+        project = repo.get_project(project_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Project not found") from exc
+    try:
+        project = generate_project_video(project)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    del payload
+    return _present_project(repo.save_project(project))
+
+
+@router.post("/projects/{project_id}/scenes/{scene_id}/video", response_model=Project)
+def create_scene_video(project_id: str, scene_id: str, payload: VideoGenerationRequest | None = None) -> Project:
+    repo = _repo()
+    try:
+        project = repo.get_project(project_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Project not found") from exc
+    try:
+        project = generate_scene_video(project, scene_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    del payload
+    return _present_project(repo.save_project(project))
 
 
 @router.get("/projects/{project_id}/render-status")

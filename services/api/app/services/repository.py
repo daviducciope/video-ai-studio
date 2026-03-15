@@ -7,6 +7,7 @@ import json
 
 from app.core.config import get_settings
 from app.schemas.project import IdentityPack, OutputAsset, Project, ProjectCreate, RenderJob
+from app.services.preview_generation import normalize_preview_backend
 
 
 class ProjectRepository:
@@ -44,6 +45,12 @@ class ProjectRepository:
                 created_at=now,
                 updated_at=now,
             ),
+            preview_backend=normalize_preview_backend(self.settings.preview_backend),
+            preview_backend_effective="mock",
+            preview_generation_mode="mock" if normalize_preview_backend(self.settings.preview_backend) == "mock" else "pending",
+            video_backend=(self.settings.video_backend if self.settings.video_backend in {"mock", "xai"} else "mock"),
+            video_backend_effective="mock",
+            video_generation_mode="mock" if self.settings.video_backend == "mock" else "pending",
             status="draft",
             created_at=now,
             updated_at=now,
@@ -94,6 +101,12 @@ class ProjectRepository:
             )
         if project.avatar_notes is None and project.identity_pack.character_notes:
             project.avatar_notes = project.identity_pack.character_notes
+        if not getattr(project, "video_backend", None):
+            project.video_backend = self.settings.video_backend if self.settings.video_backend in {"mock", "xai"} else "mock"
+        if not getattr(project, "video_backend_effective", None):
+            project.video_backend_effective = "mock"
+        if not getattr(project, "video_generation_mode", None):
+            project.video_generation_mode = "mock" if project.video_backend == "mock" else "pending"
         return project
 
     def _project_for_storage(self, project: Project) -> Project:
@@ -107,6 +120,13 @@ class ProjectRepository:
             for scene in sanitized.storyboard.scenes:
                 for preview in scene.previews:
                     preview.resolved_url = None
+                if scene.generated_video is not None:
+                    scene.generated_video.resolved_url = None
+                    scene.generated_video.provider_asset_url = None
+        if sanitized.project_video is not None:
+            sanitized.project_video.resolved_url = None
+            sanitized.project_video.provider_asset_url = None
         for output in sanitized.outputs:
             output.resolved_url = None
+            output.provider_asset_url = None
         return sanitized

@@ -23,6 +23,10 @@ class SceneSelectionRequest(BaseModel):
     preview_id: str | None = None
 
 
+class VideoGenerationRequest(BaseModel):
+    fallback_to_mock: bool | None = None
+
+
 class PreviewAsset(BaseModel):
     id: str
     scene_id: str
@@ -32,6 +36,31 @@ class PreviewAsset(BaseModel):
     resolved_url: str | None = None
     mime_type: str
     prompt: str
+    source_prompt: str | None = None
+    positive_prompt: str | None = None
+    negative_prompt: str | None = None
+    consistency_notes: str | None = None
+    identity_constraints: str | None = None
+    camera_notes: str | None = None
+    lens_notes: str | None = None
+    lighting_notes: str | None = None
+    wardrobe_notes: str | None = None
+    mood_notes: str | None = None
+    background_notes: str | None = None
+    style_notes: str | None = None
+    configured_backend: str = "mock"
+    generation_backend: str = "mock"
+    generation_mode: str = "mock"
+    variant_index: int = 1
+    seed: int | None = None
+    model_name: str | None = None
+    retry_count: int = 0
+    fallback_reason: str | None = None
+    prompt_signature: str | None = None
+    generation_duration_ms: int | None = None
+    identity_strength_score: int | None = None
+    identity_strength_label: str | None = None
+    identity_strength_reason: str | None = None
     status: str
     created_at: datetime
 
@@ -67,7 +96,11 @@ class Scene(BaseModel):
     duration_seconds: int
     selected: bool = False
     selected_preview_id: str | None = None
+    preview_revision: int = 0
+    preview_history_note: str | None = None
+    last_previews_generated_at: datetime | None = None
     previews: list[PreviewAsset] = Field(default_factory=list)
+    generated_video: OutputAsset | None = None
 
 
 class Storyboard(BaseModel):
@@ -95,7 +128,38 @@ class OutputAsset(BaseModel):
     resolved_url: str | None = None
     mime_type: str
     summary: str
+    video_backend: str = "mock"
+    video_generation_mode: str = "mock"
+    provider_request_id: str | None = None
+    provider_status: str | None = None
+    provider_model_name: str | None = None
+    source_mode: str | None = None
+    duration_seconds: int | None = None
+    aspect_ratio: str | None = None
+    resolution: str | None = None
+    prompt_used: str | None = None
+    identity_mode: str | None = None
+    fallback_message: str | None = None
+    provider_asset_url: str | None = None
     created_at: datetime
+    updated_at: datetime | None = None
+
+
+class VideoJob(BaseModel):
+    id: str
+    status: str
+    target_type: str
+    target_id: str
+    backend: str
+    active_backend: str
+    generation_mode: str
+    provider_request_id: str | None = None
+    provider_status: str | None = None
+    logs: list[str] = Field(default_factory=list)
+    output_asset_id: str | None = None
+    fallback_message: str | None = None
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
 
 
 class Project(BaseModel):
@@ -107,9 +171,23 @@ class Project(BaseModel):
     aspect_ratio: str
     avatar_notes: str | None = None
     identity_pack: IdentityPack | None = None
+    preview_backend: str = "mock"
+    preview_backend_effective: str = "mock"
+    preview_generation_mode: str = "mock"
+    preview_backend_message: str | None = None
+    preview_model_name: str | None = None
+    preview_last_generated_at: datetime | None = None
+    video_backend: str = "mock"
+    video_backend_effective: str = "mock"
+    video_generation_mode: str = "mock"
+    video_backend_message: str | None = None
+    video_model_name: str | None = None
+    video_last_generated_at: datetime | None = None
     status: str
     storyboard: Storyboard | None = None
     render_job: RenderJob | None = None
+    video_job: VideoJob | None = None
+    project_video: OutputAsset | None = None
     outputs: list[OutputAsset] = Field(default_factory=list)
     created_at: datetime
     updated_at: datetime

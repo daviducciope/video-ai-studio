@@ -1,0 +1,237 @@
+{
+  "id": "f5fe1704-1a27-488e-8ca6-b0ca3c00c365",
+  "title": "S3 Asset E2E",
+  "prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.",
+  "style": "cinematic",
+  "duration_target": 30,
+  "aspect_ratio": "16:9",
+  "avatar_notes": "Founder with navy blazer and warm rim light.",
+  "identity_pack": {
+    "primary_image": {
+      "id": "fec6a819-5f10-42d3-bd96-53955b41c9ef",
+      "file_name": "fec6a819-5f10-42d3-bd96-53955b41c9ef.png",
+      "relative_path": "assets/f5fe1704-1a27-488e-8ca6-b0ca3c00c365/fec6a819-5f10-42d3-bd96-53955b41c9ef.png",
+      "url": "/files/assets/f5fe1704-1a27-488e-8ca6-b0ca3c00c365/fec6a819-5f10-42d3-bd96-53955b41c9ef.png",
+      "resolved_url": null,
+      "mime_type": "image/png",
+      "size_bytes": 67,
+      "role": "primary",
+      "created_at": "2026-03-15T19:55:32.825036Z"
+    },
+    "reference_images": [
+      {
+        "id": "42af3bf2-4659-4b14-8d0a-1cf188877197",
+        "file_name": "42af3bf2-4659-4b14-8d0a-1cf188877197.png",
+        "relative_path": "assets/f5fe1704-1a27-488e-8ca6-b0ca3c00c365/42af3bf2-4659-4b14-8d0a-1cf188877197.png",
+        "url": "/files/assets/f5fe1704-1a27-488e-8ca6-b0ca3c00c365/42af3bf2-4659-4b14-8d0a-1cf188877197.png",
+        "resolved_url": null,
+        "mime_type": "image/png",
+        "size_bytes": 67,
+        "role": "reference",
+        "created_at": "2026-03-15T19:55:39.571601Z"
+      }
+    ],
+    "character_notes": "Founder with navy blazer and warm rim light.",
+    "lock_identity": true,
+    "created_at": "2026-03-15T19:55:25.387392Z",
+    "updated_at": "2026-03-15T19:55:39.572242Z"
+  },
+  "status": "previews_ready",
+  "storyboard": {
+    "refined_title": "S3 Asset E2E | Cinematic Cut",
+    "script": "Hook: porta avanti il messaggio principale del progetto con tono cinematic. Setup: porta avanti il messaggio principale del progetto con tono cinematic. Proof: porta avanti il messaggio principale del progetto con tono cinematic. Close: porta avanti il messaggio principale del progetto con tono cinematic.",
+    "overview": "Storyboard in 4 scene per un video 16:9 di circa 30 secondi.",
+    "scenes": [
+      {
+        "id": "scene-1",
+        "title": "Hook",
+        "beat": "Apertura immediata e memorabile",
+        "visual_prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.. Scene focus: Apertura immediata e memorabile. Visual style cinematic, aspect ratio 16:9.",
+        "negative_prompt": "blurry, distorted face, inconsistent lighting, unreadable text",
+        "voiceover": "Hook: porta avanti il messaggio principale del progetto con tono cinematic.",
+        "duration_seconds": 7,
+        "selected": false,
+        "selected_preview_id": "6d972d12-311c-49bd-b9d9-b41627aa02c0",
+        "previews": [
+          {
+            "id": "6d972d12-311c-49bd-b9d9-b41627aa02c0",
+            "scene_id": "scene-1",
+            "file_name": "f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-1_20260315195712679366.svg",
+            "relative_path": "previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-1_20260315195712679366.svg",
+            "url": "/files/previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-1_20260315195712679366.svg",
+            "resolved_url": null,
+            "mime_type": "image/svg+xml",
+            "prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.. Scene focus: Apertura immediata e memorabile. Visual style cinematic, aspect ratio 16:9. Variant 1",
+            "status": "generated",
+            "created_at": "2026-03-15T19:57:12.679549Z"
+          },
+          {
+            "id": "e6b7f56a-523f-4f4f-81fe-ea5e3a2f07ec",
+            "scene_id": "scene-1",
+            "file_name": "f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-1_20260315195712679600.svg",
+            "relative_path": "previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-1_20260315195712679600.svg",
+            "url": "/files/previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-1_20260315195712679600.svg",
+            "resolved_url": null,
+            "mime_type": "image/svg+xml",
+            "prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.. Scene focus: Apertura immediata e memorabile. Visual style cinematic, aspect ratio 16:9. Variant 2",
+            "status": "generated",
+            "created_at": "2026-03-15T19:57:12.679719Z"
+          }
+        ]
+      },
+      {
+        "id": "scene-2",
+        "title": "Setup",
+        "beat": "Introduzione del contesto e del valore",
+        "visual_prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.. Scene focus: Introduzione del contesto e del valore. Visual style cinematic, aspect ratio 16:9.",
+        "negative_prompt": "blurry, distorted face, inconsistent lighting, unreadable text",
+        "voiceover": "Setup: porta avanti il messaggio principale del progetto con tono cinematic.",
+        "duration_seconds": 7,
+        "selected": false,
+        "selected_preview_id": "77f27948-eccc-4582-be4f-ad1418e66b0a",
+        "previews": [
+          {
+            "id": "77f27948-eccc-4582-be4f-ad1418e66b0a",
+            "scene_id": "scene-2",
+            "file_name": "f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-2_20260315195712679769.svg",
+            "relative_path": "previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-2_20260315195712679769.svg",
+            "url": "/files/previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-2_20260315195712679769.svg",
+            "resolved_url": null,
+            "mime_type": "image/svg+xml",
+            "prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.. Scene focus: Introduzione del contesto e del valore. Visual style cinematic, aspect ratio 16:9. Variant 1",
+            "status": "generated",
+            "created_at": "2026-03-15T19:57:12.679887Z"
+          },
+          {
+            "id": "7be1bd78-bc53-404c-a2c0-a1a7b4ea8868",
+            "scene_id": "scene-2",
+            "file_name": "f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-2_20260315195712679921.svg",
+            "relative_path": "previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-2_20260315195712679921.svg",
+            "url": "/files/previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-2_20260315195712679921.svg",
+            "resolved_url": null,
+            "mime_type": "image/svg+xml",
+            "prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.. Scene focus: Introduzione del contesto e del valore. Visual style cinematic, aspect ratio 16:9. Variant 2",
+            "status": "generated",
+            "created_at": "2026-03-15T19:57:12.680038Z"
+          }
+        ]
+      },
+      {
+        "id": "scene-3",
+        "title": "Proof",
+        "beat": "Dimostrazione concreta o trasformazione",
+        "visual_prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.. Scene focus: Dimostrazione concreta o trasformazione. Visual style cinematic, aspect ratio 16:9.",
+        "negative_prompt": "blurry, distorted face, inconsistent lighting, unreadable text",
+        "voiceover": "Proof: porta avanti il messaggio principale del progetto con tono cinematic.",
+        "duration_seconds": 7,
+        "selected": false,
+        "selected_preview_id": "267fa591-de55-4210-8e25-c96ab00a55e7",
+        "previews": [
+          {
+            "id": "267fa591-de55-4210-8e25-c96ab00a55e7",
+            "scene_id": "scene-3",
+            "file_name": "f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-3_20260315195712680084.svg",
+            "relative_path": "previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-3_20260315195712680084.svg",
+            "url": "/files/previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-3_20260315195712680084.svg",
+            "resolved_url": null,
+            "mime_type": "image/svg+xml",
+            "prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.. Scene focus: Dimostrazione concreta o trasformazione. Visual style cinematic, aspect ratio 16:9. Variant 1",
+            "status": "generated",
+            "created_at": "2026-03-15T19:57:12.680197Z"
+          },
+          {
+            "id": "cd68f4fe-e463-438a-831c-4a3bf25daf42",
+            "scene_id": "scene-3",
+            "file_name": "f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-3_20260315195712680235.svg",
+            "relative_path": "previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-3_20260315195712680235.svg",
+            "url": "/files/previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-3_20260315195712680235.svg",
+            "resolved_url": null,
+            "mime_type": "image/svg+xml",
+            "prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.. Scene focus: Dimostrazione concreta o trasformazione. Visual style cinematic, aspect ratio 16:9. Variant 2",
+            "status": "generated",
+            "created_at": "2026-03-15T19:57:12.680354Z"
+          }
+        ]
+      },
+      {
+        "id": "scene-4",
+        "title": "Close",
+        "beat": "Call to action e payoff finale",
+        "visual_prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.. Scene focus: Call to action e payoff finale. Visual style cinematic, aspect ratio 16:9.",
+        "negative_prompt": "blurry, distorted face, inconsistent lighting, unreadable text",
+        "voiceover": "Close: porta avanti il messaggio principale del progetto con tono cinematic.",
+        "duration_seconds": 7,
+        "selected": false,
+        "selected_preview_id": "ae14f8f7-21bd-419d-a11d-6e83c337d2a4",
+        "previews": [
+          {
+            "id": "ae14f8f7-21bd-419d-a11d-6e83c337d2a4",
+            "scene_id": "scene-4",
+            "file_name": "f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-4_20260315195712680403.svg",
+            "relative_path": "previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-4_20260315195712680403.svg",
+            "url": "/files/previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-4_20260315195712680403.svg",
+            "resolved_url": null,
+            "mime_type": "image/svg+xml",
+            "prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.. Scene focus: Call to action e payoff finale. Visual style cinematic, aspect ratio 16:9. Variant 1",
+            "status": "generated",
+            "created_at": "2026-03-15T19:57:12.680525Z"
+          },
+          {
+            "id": "365e0c3d-ee98-4866-b8b2-e6ee2ae01b12",
+            "scene_id": "scene-4",
+            "file_name": "f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-4_20260315195712680563.svg",
+            "relative_path": "previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-4_20260315195712680563.svg",
+            "url": "/files/previews/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_scene-4_20260315195712680563.svg",
+            "resolved_url": null,
+            "mime_type": "image/svg+xml",
+            "prompt": "Create a cinematic launch video that keeps a consistent founder identity across all frames.. Scene focus: Call to action e payoff finale. Visual style cinematic, aspect ratio 16:9. Variant 2",
+            "status": "generated",
+            "created_at": "2026-03-15T19:57:12.680680Z"
+          }
+        ]
+      }
+    ],
+    "generated_at": "2026-03-15T19:56:42.820737Z"
+  },
+  "render_job": {
+    "id": "c8bc16c7-956e-4f27-b331-a8f8067620bf",
+    "status": "completed",
+    "logs": [
+      "Render job accepted",
+      "Preparing scene manifest",
+      "Preview selection resolved",
+      "Mock render completed",
+      "2 output artifact(s) available"
+    ],
+    "output_asset_ids": [
+      "044392b4-2c06-4834-8013-b86457dda606",
+      "b0744b2b-a33d-40b5-9463-df880d3598af"
+    ],
+    "started_at": "2026-03-15T19:56:45.894716Z",
+    "completed_at": "2026-03-15T19:56:45.895262Z"
+  },
+  "outputs": [
+    {
+      "id": "044392b4-2c06-4834-8013-b86457dda606",
+      "file_name": "f5fe1704-1a27-488e-8ca6-b0ca3c00c365_20260315195645_render_manifest.txt",
+      "relative_path": "renders/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_20260315195645_render_manifest.txt",
+      "url": "/files/renders/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_20260315195645_render_manifest.txt",
+      "resolved_url": null,
+      "mime_type": "text/plain",
+      "summary": "Manifest del render finale mock",
+      "created_at": "2026-03-15T19:56:45.895217Z"
+    },
+    {
+      "id": "b0744b2b-a33d-40b5-9463-df880d3598af",
+      "file_name": "f5fe1704-1a27-488e-8ca6-b0ca3c00c365_20260315195645_timeline.txt",
+      "relative_path": "renders/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_20260315195645_timeline.txt",
+      "url": "/files/renders/f5fe1704-1a27-488e-8ca6-b0ca3c00c365_20260315195645_timeline.txt",
+      "resolved_url": null,
+      "mime_type": "text/plain",
+      "summary": "Timeline delle scene selezionate",
+      "created_at": "2026-03-15T19:56:45.895217Z"
+    }
+  ],
+  "created_at": "2026-03-15T19:55:25.387392Z",
+  "updated_at": "2026-03-15T19:57:12.680710Z"
+}

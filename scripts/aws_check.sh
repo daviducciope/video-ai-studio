@@ -3,17 +3,25 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+load_env_file() {
+  local env_file="$1"
+  [[ -f "$env_file" ]] || return 0
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    [[ -z "$line" || "$line" == \#* ]] && continue
+    local key="${line%%=*}"
+    local value="${line#*=}"
+    if [[ -z "${!key+x}" ]]; then
+      export "$key=$value"
+    fi
+  done < "$env_file"
+}
+
 if ! command -v aws >/dev/null 2>&1; then
   echo "AWS CLI non trovata nel PATH." >&2
   exit 1
 fi
 
-if [[ -f "$ROOT_DIR/.env" ]]; then
-  set -a
-  # shellcheck disable=SC1091
-  source "$ROOT_DIR/.env"
-  set +a
-fi
+load_env_file "$ROOT_DIR/.env"
 
 REGION="${AWS_REGION:-}"
 BUCKET="${S3_BUCKET_NAME:-}"
